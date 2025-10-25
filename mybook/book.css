@@ -1,0 +1,161 @@
+/* -------- Print page setup -------- */
+@page {
+  size: 148mm 210mm; /* A5 */
+  margin: 2cm 2cm 3cm 2cm;
+}
+@page :left  { @bottom-left  { content: counter(page); } }
+@page :right { @bottom-right { content: counter(page); } }
+
+@page full  { margin: 0; }
+@page clean {
+  @bottom-right { content: none; }
+  @bottom-left  { content: none; }
+}
+
+/* -------- Base -------- */
+
+html {
+  /* CHANGED: start chapter counter; recipe handled per chapter */
+  counter-reset: chapter 0;
+  font-size: 10pt;
+}
+body { margin: 0; }
+p { line-height: 2; text-align: justify; }
+img { display: block; margin: 2em auto; max-width: 70%; }
+
+/* Optional frontmatter heading style (kept) */
+.frontmatter h1 { font-size: 2em; margin: 0 0 0.5em; }
+
+/* -------- Title page -------- */
+
+#title-page {
+  page: full;
+  break-before: page;
+  break-after: page;
+  width: 148mm; height: 210mm;
+  background: url("img/paella-3.png") center / cover no-repeat;
+  position: relative; text-align: center;
+  margin: 0; padding: 0;
+}
+#title-page img {
+  display: block; margin: 0 auto; max-width: 60%; height: auto;
+  position: absolute; top: 45%; left: 50%; transform: translate(-50%,0%);
+}
+
+/* -------- Chapters & recipes -------- */
+
+/* CHANGED: increment chapter on each H1 and reset recipe counter inside the chapter */
+h1 {
+  counter-increment: chapter;
+  counter-reset: recipe 0;
+  /* Many books start chapters on right pages */
+  break-before: right;
+  margin: 0 0 0.5em 0;
+}
+
+/* The recipe section hosts the banner background */
+.recipe {
+  position: relative; /* CHANGED: anchor for ::before */
+  break-before: page; /* recipes start on a new page, adjust if you like */
+}
+
+.recipe::before {
+  background: center / cover;
+  border-radius: 0 0 50% 50% / 0 0 15mm 15mm;
+  content: "";
+  display: block;
+  height: 90mm;
+  left: -30mm;
+  position: absolute;
+  top: -20mm;
+  width: 168mm;
+  z-index: -1; /* behind the recipe content */
+  background-image: url("img/fish-curry-2.png"); /* default */
+}
+#fish-curry::before {
+  background-image: url("img/fish-curry-2.png");
+}
+
+/* Make h2 look like your section/recipe title and increment recipe number */
+.recipe h2,
+h2 {
+  color: white;
+  display: flex;
+  flex-direction: column;
+  font-family: OpenDyslexic, sans-serif; /* fallback */
+  font-size: 3em;
+  height: 6cm;
+  justify-content: flex-end;
+  margin: 0;
+  text-align: center;
+}
+/* CHANGED: only increment recipe on the recipe title itself */
+.recipe h2 { counter-increment: recipe; }
+
+/* the aside element is used for images associated with chapters or recipes */
+aside {
+  display: flex;
+  justify-content: center;
+}
+
+aside figure {
+  flex: none;
+  margin: 0;
+  padding: 1em;
+  text-align: center;
+}
+
+aside img {
+  border: 0.4mm solid white;
+  border-radius: 50%;
+  margin: 0 auto;
+  max-width: 14mm;
+}
+
+/* -------- Contents (TOC) -------- */
+#contents {
+  page: clean;
+  break-before: right;
+}
+
+/* The TOC uses a simple <ul> list */
+#contents ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+#contents ul > li {
+  margin: 0.6em 0;
+}
+
+/* Links inherit color and remove underline */
+#contents a {
+  color: inherit;
+  text-decoration: none;
+  display: block;
+}
+
+/* Default TOC entry: show the target element's text and its page number */
+#contents a::before {
+  content: target-text(attr(href));
+}
+#contents a::after {
+  content: target-counter(attr(href), page);
+  float: right;
+}
+
+/* CHAPTER line in TOC: "Chapter N — Title" */
+#contents a.chapter-link::before {
+  content: "Chapter " target-counter(attr(href), chapter) " — "
+           target-text(attr(href));
+}
+
+/* RECIPE line in TOC: "N.M Title" (chapter.recipe numbering) */
+#contents a.recipe-link::before {
+  content: target-counter(attr(href), chapter) "." target-counter(attr(href), recipe)
+           " " target-text(attr(href));
+}
+
+
+/* -------- General flow -------- */
+section { break-after: auto; }
