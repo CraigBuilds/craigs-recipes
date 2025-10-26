@@ -14,17 +14,12 @@
 
 /* -------- Base -------- */
 
-html {
-  /* CHANGED: start chapter counter; recipe handled per chapter */
-  counter-reset: chapter 0;
-  font-size: 10pt;
-}
+html {counter-reset: chapter 0; font-size: 10pt;}
 body { margin: 0; }
-p { line-height: 2; text-align: justify; }
+p { line-height: 2; text-align: justify;}
 img { display: block; margin: 2em auto; max-width: 70%; }
-
-/* Optional frontmatter heading style (kept) */
-.frontmatter h1 { font-size: 2em; margin: 0 0 0.5em; }
+h3 {text-align: center;} /*Make all h3 headings centered*/
+.frontmatter h1 { font-size: 2em; margin: 0 0 0.5em; } /* Optional frontmatter heading style */
 
 /* -------- Title page -------- */
 
@@ -44,7 +39,7 @@ img { display: block; margin: 2em auto; max-width: 70%; }
 
 /* -------- Chapters & recipes -------- */
 
-/* CHANGED: increment chapter on each H1 and reset recipe counter inside the chapter */
+/* Increment chapter on each H1 and reset recipe counter inside the chapter */
 h1 {
   counter-increment: chapter;
   counter-reset: recipe 0;
@@ -55,8 +50,8 @@ h1 {
 
 /* The recipe section hosts the banner background */
 .recipe {
-  position: relative; /* CHANGED: anchor for ::before */
-  break-before: page; /* recipes start on a new page, adjust if you like */
+  position: relative; /* anchor for ::before */
+  break-before: page; /* recipes start on a new page */
 }
 
 .recipe::before {
@@ -72,8 +67,15 @@ h1 {
   z-index: -1; /* behind the recipe content */
   background-image: url("img/fish-curry-2.png"); /* default */
 }
+
+/* Different background images for different recipes */
+
 #fish-curry::before {
   background-image: url("img/fish-curry-2.png");
+}
+
+#arancini::before {
+  background-image: url("img/arancini.jpg");
 }
 
 /* Make h2 look like your section/recipe title and increment recipe number */
@@ -89,7 +91,7 @@ h2 {
   margin: 0;
   text-align: center;
 }
-/* CHANGED: only increment recipe on the recipe title itself */
+/* only increment recipe on the recipe title itself */
 .recipe h2 { counter-increment: recipe; }
 
 /* the aside element is used for images associated with chapters or recipes */
